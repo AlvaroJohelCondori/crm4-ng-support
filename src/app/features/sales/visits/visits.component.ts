@@ -7,6 +7,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { VisitsService } from './services/visits/visits.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CommonModule } from '@angular/common';
+import { MatSelectModule } from '@angular/material/select';
+import { FormsModule } from '@angular/forms';
 
 export interface VisitsData {
   Acompanado: string;
@@ -51,11 +53,32 @@ export interface VisitsData {
     MatSortModule,
     MatPaginatorModule,
     MatProgressSpinnerModule,
+    MatSelectModule,
+    FormsModule,
   ],
   templateUrl: './visits.component.html',
   styleUrl: './visits.component.scss',
 })
 export class VisitsComponent implements AfterViewInit {
+  // Todas las columnas disponibles
+  allColumns: { value: string; viewValue: string }[] = [
+    { value: 'ActividadID', viewValue: 'ID Actividad' },
+    { value: 'FechaIniPlan', viewValue: 'Fecha Planificada' },
+    { value: 'Kunnr', viewValue: 'Código Cliente' },
+    { value: 'NombreCliente', viewValue: 'Nombre Cliente' },
+    { value: 'NombreUsuario', viewValue: 'Nombre Usuario' },
+    { value: 'Regional', viewValue: 'Regional' },
+    { value: 'Estado', viewValue: 'Estado' },
+    { value: 'Descripcion', viewValue: 'Descripción' },
+    { value: 'FechaCrea', viewValue: 'Fecha Creación' },
+    { value: 'DirCliente', viewValue: 'Dirección Cliente' },
+    { value: 'GrupoCliente', viewValue: 'Grupo Cliente' },
+    { value: 'CodUsuario', viewValue: 'Código Usuario' },
+    { value: 'CodVendedor', viewValue: 'Código Vendedor' },
+    { value: 'OrgVenta', viewValue: 'Organización Venta' },
+  ];
+
+  // Columnas seleccionadas por defecto
   displayedColumns: string[] = [
     'ActividadID',
     'FechaIniPlan',
@@ -65,6 +88,10 @@ export class VisitsComponent implements AfterViewInit {
     'Regional',
     'Estado',
   ];
+
+  // Columnas que se muestran actualmente
+  columnsToDisplay: string[] = [...this.displayedColumns];
+
   dataSource: MatTableDataSource<VisitsData>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -107,5 +134,15 @@ export class VisitsComponent implements AfterViewInit {
         this.isLoading = false;
       },
     });
+  }
+
+  // Método para actualizar las columnas mostradas
+  updateDisplayedColumns(selectedColumns: string[]) {
+    if (selectedColumns && selectedColumns.length > 0) {
+      this.columnsToDisplay = [...selectedColumns];
+    } else {
+      // Si no hay columnas seleccionadas, mostrar al menos una
+      this.columnsToDisplay = ['ActividadID'];
+    }
   }
 }
