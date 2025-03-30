@@ -2,37 +2,64 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
-}
 
-.app-toolbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 2;
-  box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.1);
-}
+  // Barra de navegación superior
+  .app-toolbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 
-.toolbar-spacer {
-  flex: 1 1 auto;
-}
+    .toolbar-spacer {
+      flex: 1 1 auto;
+    }
+  }
 
-.app-sidenav-container {
-  flex: 1;
-  margin-top: 64px;
-}
-
-.app-sidenav {
-  width: 250px;
-  box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.1);
-}
-
-.app-content {
-  padding: 10px;
-}
-
-@media (max-width: 600px) {
+  // Contenedor principal
   .app-sidenav-container {
-    margin-top: 56px;
+    flex: 1;
+    margin-top: 64px;
+
+    @media (max-width: 600px) {
+      margin-top: 56px;
+    }
+
+    // Menú lateral
+    .app-sidenav {
+      width: 250px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+      // Estilos para los paneles de expansión
+      mat-expansion-panel {
+        box-shadow: none !important;
+        background: transparent;
+
+        mat-expansion-panel-header {
+          padding: 0 16px;
+
+          mat-panel-title {
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+
+            .panel-icon {
+              margin-right: 8px;
+            }
+          }
+        }
+
+        // Listas de navegación dentro de los paneles
+        mat-nav-list {
+          padding-top: 0;
+        }
+      }
+    }
+
+    // Área de contenido principal
+    .app-content {
+      padding: 10px;
+    }
   }
 }

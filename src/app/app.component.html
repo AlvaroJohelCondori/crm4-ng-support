@@ -14,53 +14,91 @@
     </button>
   </mat-toolbar>
 
-  <!-- Contenedor principal con menú lateral y área de contenido -->
   <mat-sidenav-container class="app-sidenav-container">
     <mat-sidenav [opened]="isMenuOpen" mode="side" class="app-sidenav">
-      <mat-nav-list>
-        <a mat-list-item routerLink="/">
-          <mat-icon matListItemIcon>home</mat-icon>
-          <span matListItemTitle>Inicio</span>
-        </a>
-        <a mat-list-item routerLink="/clientes">
-          <mat-icon matListItemIcon>people</mat-icon>
-          <span matListItemTitle>Clientes</span>
-        </a>
-        <a mat-list-item routerLink="/productos">
-          <mat-icon matListItemIcon>inventory</mat-icon>
-          <span matListItemTitle>Productos</span>
-        </a>
-        <a mat-list-item routerLink="/ventas">
-          <mat-icon matListItemIcon>shopping_cart</mat-icon>
-          <span matListItemTitle>Ventas</span>
-        </a>
-        <a mat-list-item routerLink="/reportes">
-          <mat-icon matListItemIcon>bar_chart</mat-icon>
-          <span matListItemTitle>Reportes</span>
-        </a>
-      </mat-nav-list>
+      <mat-accordion multi>
+        <!-- Sección Ventas -->
+        <mat-expansion-panel [expanded]="true">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <mat-icon class="panel-icon">point_of_sale</mat-icon>
+              Ventas
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <mat-nav-list>
+            <a mat-list-item routerLink="/">
+              <mat-icon matListItemIcon>home</mat-icon>
+              <span matListItemTitle>Inicio</span>
+            </a>
+            <a mat-list-item routerLink="/clientes">
+              <mat-icon matListItemIcon>people</mat-icon>
+              <span matListItemTitle>Clientes</span>
+            </a>
+            <a mat-list-item routerLink="/productos">
+              <mat-icon matListItemIcon>inventory</mat-icon>
+              <span matListItemTitle>Productos</span>
+            </a>
+            <a mat-list-item routerLink="/ventas">
+              <mat-icon matListItemIcon>shopping_cart</mat-icon>
+              <span matListItemTitle>Ventas</span>
+            </a>
+            <a mat-list-item routerLink="/reportes-ventas">
+              <mat-icon matListItemIcon>bar_chart</mat-icon>
+              <span matListItemTitle>Reportes</span>
+            </a>
+          </mat-nav-list>
+        </mat-expansion-panel>
+
+        <!-- Sección Distribución -->
+        <mat-expansion-panel [expanded]="true">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <mat-icon class="panel-icon">local_shipping</mat-icon>
+              Distribución
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <mat-nav-list>
+            <a mat-list-item routerLink="/dist-inicio">
+              <mat-icon matListItemIcon>home</mat-icon>
+              <span matListItemTitle>Inicio</span>
+            </a>
+            <a mat-list-item routerLink="/dist-clientes">
+              <mat-icon matListItemIcon>people</mat-icon>
+              <span matListItemTitle>Clientes</span>
+            </a>
+            <a mat-list-item routerLink="/dist-productos">
+              <mat-icon matListItemIcon>inventory</mat-icon>
+              <span matListItemTitle>Productos</span>
+            </a>
+            <a mat-list-item routerLink="/dist-ventas">
+              <mat-icon matListItemIcon>shopping_cart</mat-icon>
+              <span matListItemTitle>Ventas</span>
+            </a>
+            <a mat-list-item routerLink="/dist-reportes">
+              <mat-icon matListItemIcon>bar_chart</mat-icon>
+              <span matListItemTitle>Reportes</span>
+            </a>
+          </mat-nav-list>
+        </mat-expansion-panel>
+      </mat-accordion>
     </mat-sidenav>
 
-    <!-- Área de contenido principal -->
     <mat-sidenav-content class="app-content">
-      <div class="content-container">
-        <mat-card>
-          <mat-card-header>
-            <mat-card-title>Bienvenido al Sistema</mat-card-title>
-          </mat-card-header>
-          <mat-card-content>
-            <p>
-              Este es el layout básico de tu aplicación Angular con Angular
-              Material.
-            </p>
-          </mat-card-content>
-          <mat-card-actions>
-            <button mat-raised-button color="primary">Comenzar</button>
-          </mat-card-actions>
-        </mat-card>
-      </div>
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Bienvenido al Sistema</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p>
+            Este es el layout básico de tu aplicación Angular con Angular
+            Material.
+          </p>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-raised-button color="primary">Comenzar</button>
+        </mat-card-actions>
+      </mat-card>
 
-      <!-- Router outlet para mostrar los componentes según la ruta -->
       <router-outlet></router-outlet>
     </mat-sidenav-content>
   </mat-sidenav-container>
