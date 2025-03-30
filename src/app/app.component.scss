@@ -3,7 +3,6 @@
   flex-direction: column;
   height: 100vh;
 
-  // Barra de navegación superior
   .app-toolbar {
     position: fixed;
     top: 0;
@@ -17,7 +16,6 @@
     }
   }
 
-  // Contenedor principal
   .app-sidenav-container {
     flex: 1;
     margin-top: 64px;
@@ -26,12 +24,10 @@
       margin-top: 56px;
     }
 
-    // Menú lateral
     .app-sidenav {
       width: 250px;
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 
-      // Estilos para los paneles de expansión
       mat-expansion-panel {
         box-shadow: none !important;
         background: transparent;
@@ -50,14 +46,15 @@
           }
         }
 
-        // Listas de navegación dentro de los paneles
         mat-nav-list {
           padding-top: 0;
+          .active-link {
+            background-color: rgba(0, 0, 0, 0.1);
+          }
         }
       }
     }
 
-    // Área de contenido principal
     .app-content {
       padding: 10px;
     }
