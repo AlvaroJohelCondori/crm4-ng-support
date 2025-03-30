@@ -8,19 +8,33 @@
   />
 </mat-form-field>
 
-<!-- Selector de columnas -->
-<mat-form-field>
-  <mat-label>Seleccionar columnas</mat-label>
-  <mat-select
-    [(ngModel)]="columnsToDisplay"
-    multiple
-    (selectionChange)="updateDisplayedColumns($event.value)"
-  >
-    <mat-option *ngFor="let column of allColumns" [value]="column.value">
-      {{ column.viewValue }}
-    </mat-option>
-  </mat-select>
-</mat-form-field>
+<div class="column-selector-container">
+  <mat-form-field class="column-selector">
+    <mat-label>Seleccionar columnas</mat-label>
+    <mat-select
+      [(ngModel)]="columnsToDisplay"
+      multiple
+      (selectionChange)="updateDisplayedColumns($event.value)"
+    >
+      <div class="select-all-option">
+        <mat-checkbox
+          [checked]="areAllColumnsSelected()"
+          [indeterminate]="
+            columnsToDisplay.length > 0 && !areAllColumnsSelected()
+          "
+          (change)="toggleAllColumns($event.checked)"
+        >
+          Seleccionar todo
+        </mat-checkbox>
+      </div>
+      <mat-divider></mat-divider>
+
+      <mat-option *ngFor="let column of allColumns" [value]="column.value">
+        {{ column.viewValue }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
 
 <div class="mat-elevation-z8">
   <div *ngIf="isLoading" class="loading-spinner">
@@ -29,7 +43,6 @@
   </div>
 
   <table mat-table [dataSource]="dataSource" matSort>
-    <!-- Columnas dinámicas -->
     <ng-container *ngFor="let column of allColumns">
       <ng-container [matColumnDef]="column.value">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>

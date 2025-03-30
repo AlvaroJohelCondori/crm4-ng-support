@@ -9,6 +9,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CommonModule } from '@angular/common';
 import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDividerModule } from '@angular/material/divider';
 
 export interface VisitsData {
   Acompanado: string;
@@ -55,6 +57,8 @@ export interface VisitsData {
     MatProgressSpinnerModule,
     MatSelectModule,
     FormsModule,
+    MatCheckboxModule,
+    MatDividerModule,
   ],
   templateUrl: './visits.component.html',
   styleUrl: './visits.component.scss',
@@ -62,20 +66,35 @@ export interface VisitsData {
 export class VisitsComponent implements AfterViewInit {
   // Todas las columnas disponibles
   allColumns: { value: string; viewValue: string }[] = [
-    { value: 'ActividadID', viewValue: 'ID Actividad' },
-    { value: 'FechaIniPlan', viewValue: 'Fecha Planificada' },
-    { value: 'Kunnr', viewValue: 'Código Cliente' },
-    { value: 'NombreCliente', viewValue: 'Nombre Cliente' },
-    { value: 'NombreUsuario', viewValue: 'Nombre Usuario' },
-    { value: 'Regional', viewValue: 'Regional' },
+    { value: 'Acompanado', viewValue: 'Acompanado' },
+    { value: 'ActividadID', viewValue: 'ActividadID' },
+    { value: 'CodDivision', viewValue: 'CodDivision' },
+    { value: 'CodUsuario', viewValue: 'CodUsuario' },
+    { value: 'CodVendedor', viewValue: 'CodVendedor' },
+    { value: 'Descripcion', viewValue: 'Descripcion' },
+    { value: 'DirCliente', viewValue: 'DirCliente' },
     { value: 'Estado', viewValue: 'Estado' },
-    { value: 'Descripcion', viewValue: 'Descripción' },
-    { value: 'FechaCrea', viewValue: 'Fecha Creación' },
-    { value: 'DirCliente', viewValue: 'Dirección Cliente' },
-    { value: 'GrupoCliente', viewValue: 'Grupo Cliente' },
-    { value: 'CodUsuario', viewValue: 'Código Usuario' },
-    { value: 'CodVendedor', viewValue: 'Código Vendedor' },
-    { value: 'OrgVenta', viewValue: 'Organización Venta' },
+    { value: 'FechaCompromiso', viewValue: 'FechaCompromiso' },
+    { value: 'FechaCrea', viewValue: 'FechaCrea' },
+    { value: 'FechaFinPlan', viewValue: 'FechaFinPlan' },
+    { value: 'FechaFinReal', viewValue: 'FechaFinReal' },
+    { value: 'FechaIniPlan', viewValue: 'FechaIniPlan' },
+    { value: 'FechaIniReal', viewValue: 'FechaIniReal' },
+    { value: 'GrupoCliente', viewValue: 'GrupoCliente' },
+    { value: 'Kunnr', viewValue: 'Kunnr' },
+    { value: 'LatitudPlan', viewValue: 'LatitudPlan' },
+    { value: 'LatitudReal', viewValue: 'LatitudReal' },
+    { value: 'LongitudPlan', viewValue: 'LongitudPlan' },
+    { value: 'LongitudReal', viewValue: 'LongitudReal' },
+    { value: 'MotivoNoActividad', viewValue: 'MotivoNoActividad' },
+    { value: 'NombreCliente', viewValue: 'NombreCliente' },
+    { value: 'NombreUsuario', viewValue: 'NombreUsuario' },
+    { value: 'Observacion', viewValue: 'Observacion' },
+    { value: 'OrgVenta', viewValue: 'OrgVenta' },
+    { value: 'Regional', viewValue: 'Regional' },
+    { value: 'RegionalCliente', viewValue: 'RegionalCliente' },
+    { value: 'Remoto', viewValue: 'Remoto' },
+    { value: 'UsuarioFecha', viewValue: 'UsuarioFecha' },
   ];
 
   // Columnas seleccionadas por defecto
@@ -136,13 +155,31 @@ export class VisitsComponent implements AfterViewInit {
     });
   }
 
-  // Método para actualizar las columnas mostradas
   updateDisplayedColumns(selectedColumns: string[]) {
     if (selectedColumns && selectedColumns.length > 0) {
       this.columnsToDisplay = [...selectedColumns];
     } else {
-      // Si no hay columnas seleccionadas, mostrar al menos una
       this.columnsToDisplay = ['ActividadID'];
+    }
+  }
+
+  selectAllColumns() {
+    this.columnsToDisplay = this.allColumns.map((column) => column.value);
+  }
+
+  deselectAllColumns() {
+    this.columnsToDisplay = ['ActividadID'];
+  }
+
+  areAllColumnsSelected(): boolean {
+    return this.allColumns.length === this.columnsToDisplay.length;
+  }
+
+  toggleAllColumns(checked: boolean) {
+    if (checked) {
+      this.selectAllColumns();
+    } else {
+      this.deselectAllColumns();
     }
   }
 }
