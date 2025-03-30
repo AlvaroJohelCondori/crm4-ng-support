@@ -7,7 +7,11 @@ table {
   width: 100%;
 }
 
-td,
-th {
-  width: 25%;
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  flex-direction: column;
+  gap: 10px;
 }
