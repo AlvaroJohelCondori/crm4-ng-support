@@ -36,7 +36,7 @@
   />
 </mat-form-field>
 
-<div class="mat-elevation-z8">
+<div class="example-container">
   <table mat-table [dataSource]="dataSource" matSort>
     <ng-container *ngFor="let column of allColumns">
       <ng-container [matColumnDef]="column.value">
@@ -63,10 +63,9 @@
     <mat-spinner diameter="40"></mat-spinner>
     <span>Cargando datos...</span>
   </div>
-
-  <mat-paginator
-    [pageSizeOptions]="[5, 10, 25, 100]"
-    showFirstLastButtons
-    aria-label="Seleccionar página de visitas"
-  ></mat-paginator>
 </div>
+<mat-paginator
+  [pageSizeOptions]="[5, 10, 25, 100]"
+  showFirstLastButtons
+  aria-label="Seleccionar página de visitas"
+></mat-paginator>

@@ -29,3 +29,19 @@ table {
   padding: 0 16px;
   margin: 8px 0;
 }
+
+.example-container {
+  width: 100%;
+  overflow: auto;
+}
+
+.mat-mdc-table {
+  min-width: 100%;
+  width: max-content;
+}
+
+.mat-mdc-cell,
+.mat-mdc-header-cell {
+  padding: 0 12px;
+  white-space: nowrap;
+}
