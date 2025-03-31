@@ -1,5 +1,6 @@
-table {
+.column-selector-container {
   width: 100%;
+  margin-bottom: 16px;
 }
 
 .mat-mdc-form-field {
@@ -7,44 +8,29 @@ table {
   width: 100%;
 }
 
-.loading-spinner {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.column-selector-container {
-  width: 100%;
-  margin-bottom: 16px;
-}
-
-.select-all-option {
-  padding: 0 16px;
-  margin: 8px 0;
-}
-
 .example-container {
   position: relative;
   width: 100%;
   overflow: auto;
+
+  .loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 1000;
+  }
 }
 
-.loading-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(255, 255, 255, 0.8);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  gap: 10px;
-  z-index: 1000;
+table {
+  width: 100%;
 }
 
 .mat-mdc-table {
@@ -56,4 +42,44 @@ table {
 .mat-mdc-header-cell {
   padding: 0 12px;
   white-space: nowrap;
+}
+
+.copyable-cell {
+  cursor: pointer;
+  position: relative;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+
+    .copy-icon {
+      opacity: 1;
+    }
+  }
+
+  .cell-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .copy-icon {
+    font-size: 20px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    color: #666;
+  }
+}
+
+.select-all-option {
+  padding: 0 16px;
+  margin: 8px 0;
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  flex-direction: column;
+  gap: 10px;
 }

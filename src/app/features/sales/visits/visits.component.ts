@@ -31,6 +31,9 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { Subject } from 'rxjs';
 import { takeUntil, finalize } from 'rxjs/operators';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 export interface VisitsData {
   Acompanado: string;
@@ -81,6 +84,9 @@ export interface VisitsData {
     MatDividerModule,
     MatDialogModule,
     MatButtonModule,
+    MatSnackBarModule,
+    MatIconModule,
+    MatTooltipModule,
   ],
   templateUrl: './visits.component.html',
   styleUrl: './visits.component.scss',
@@ -90,15 +96,14 @@ export class VisitsComponent implements OnInit, AfterViewInit, OnDestroy {
   private readonly destroy$ = new Subject<void>();
   readonly defaultPageSize = 10;
 
-  // Mover columnas a una propiedad readonly
   private readonly DEFAULT_COLUMNS = [
     'ActividadID',
-    'FechaIniPlan',
-    'Kunnr',
-    'NombreCliente',
-    'NombreUsuario',
+    'CodUsuario',
     'Regional',
+    'CodVendedor',
+    'Kunnr',
     'Estado',
+    'FechaCrea',
   ] as const;
 
   allColumns = [
@@ -145,7 +150,8 @@ export class VisitsComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private visitsService: VisitsService,
     private changeDetectorRef: ChangeDetectorRef,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -243,6 +249,27 @@ export class VisitsComponent implements OnInit, AfterViewInit, OnDestroy {
           this.updateDisplayedColumns(result);
         }
       });
+  }
+
+  copyToClipboard(content: any): void {
+    if (content !== null && content !== undefined) {
+      const textToCopy = content.toString();
+      navigator.clipboard.writeText(textToCopy).then(
+        () => {
+          this.snackBar.open(`Copiado: ${textToCopy}`, 'Cerrar', {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'bottom',
+          });
+        },
+        (err) => {
+          console.error('Error al copiar: ', err);
+          this.snackBar.open('No se pudo copiar al portapapeles', 'Cerrar', {
+            duration: 3000,
+          });
+        }
+      );
+    }
   }
 }
 

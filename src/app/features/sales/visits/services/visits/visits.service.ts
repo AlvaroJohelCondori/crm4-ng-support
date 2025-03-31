@@ -42,7 +42,6 @@ export class VisitsService {
   constructor(private db: Database) {}
 
   getVisits(): Observable<VisitsData[]> {
-    // Convertir a Observable frío para mejor control de memoria
     return new Observable<VisitsData[]>((observer) => {
       const visitsRef = ref(this.db, ':80/Actividad/BO10');
       let unsubscribe: () => void;
@@ -73,14 +72,12 @@ export class VisitsService {
         return () => unsubscribe();
       } catch (error) {
         observer.error(error);
-        return () => {}; // Return empty cleanup function in case of error
+        return () => {};
       }
     }).pipe(
-      // Evitar múltiples emisiones del mismo valor
       distinctUntilChanged(
         (prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)
       ),
-      // Cachear último resultado
       shareReplay(1)
     );
   }
