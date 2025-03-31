@@ -139,7 +139,7 @@ export class VisitsComponent implements AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   isLoading = true;
-  defaultPageSize = 10;
+  readonly defaultPageSize = 10;
 
   constructor(
     private visitsService: VisitsService,
@@ -155,8 +155,11 @@ export class VisitsComponent implements AfterViewInit {
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+
     if (this.paginator) {
       this.paginator.pageSize = this.defaultPageSize;
+      this.paginator.pageIndex = 0;
+      this.changeDetectorRef.detectChanges();
     }
   }
 
