@@ -21,6 +21,13 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'sales/collections',
+    loadComponent: () =>
+      import(
+        './features/sales/components/collections/collections.component'
+      ).then((m) => m.CollectionsComponent),
+  },
+  {
     path: 'distribution/visits',
     loadComponent: () =>
       import('./features/distribution/components/visits/visits.component').then(
