@@ -102,13 +102,35 @@ export class VisitsComponent implements OnInit, AfterViewInit, OnDestroy {
   ] as const;
 
   allColumns = [
+    { value: 'Acompanado', viewValue: 'Acompanado' },
     { value: 'ActividadID', viewValue: 'ActividadID' },
+    { value: 'CodDivision', viewValue: 'CodDivision' },
+    { value: 'CodUsuario', viewValue: 'CodUsuario' },
+    { value: 'CodVendedor', viewValue: 'CodVendedor' },
+    { value: 'Descripcion', viewValue: 'Descripcion' },
+    { value: 'DirCliente', viewValue: 'DirCliente' },
+    { value: 'Estado', viewValue: 'Estado' },
+    { value: 'FechaCompromiso', viewValue: 'FechaCompromiso' },
+    { value: 'FechaCrea', viewValue: 'FechaCrea' },
+    { value: 'FechaFinPlan', viewValue: 'FechaFinPlan' },
+    { value: 'FechaFinReal', viewValue: 'FechaFinReal' },
     { value: 'FechaIniPlan', viewValue: 'FechaIniPlan' },
+    { value: 'FechaIniReal', viewValue: 'FechaIniReal' },
+    { value: 'GrupoCliente', viewValue: 'GrupoCliente' },
     { value: 'Kunnr', viewValue: 'Kunnr' },
+    { value: 'LatitudPlan', viewValue: 'LatitudPlan' },
+    { value: 'LatitudReal', viewValue: 'LatitudReal' },
+    { value: 'LongitudPlan', viewValue: 'LongitudPlan' },
+    { value: 'LongitudReal', viewValue: 'LongitudReal' },
+    { value: 'MotivoNoActividad', viewValue: 'MotivoNoActividad' },
     { value: 'NombreCliente', viewValue: 'NombreCliente' },
     { value: 'NombreUsuario', viewValue: 'NombreUsuario' },
+    { value: 'Observacion', viewValue: 'Observacion' },
+    { value: 'OrgVenta', viewValue: 'OrgVenta' },
     { value: 'Regional', viewValue: 'Regional' },
-    { value: 'Estado', viewValue: 'Estado' },
+    { value: 'RegionalCliente', viewValue: 'RegionalCliente' },
+    { value: 'Remoto', viewValue: 'Remoto' },
+    { value: 'UsuarioFecha', viewValue: 'UsuarioFecha' },
   ];
 
   // Estado del componente
