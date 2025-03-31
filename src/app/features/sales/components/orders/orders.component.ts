@@ -195,6 +195,9 @@ export class OrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     this.isLoading = true;
+    this.dataSource.data = [];
+    this.changeDetectorRef.detectChanges();
+
     this.ordersService
       .getOrders()
       .pipe(

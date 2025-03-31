@@ -154,6 +154,9 @@ export class VisitsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     this.isLoading = true;
+    this.dataSource.data = [];
+    this.changeDetectorRef.detectChanges();
+
     this.visitsService
       .getVisits()
       .pipe(

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Database, ref, onValue } from '@angular/fire/database';
 import { Observable } from 'rxjs';
-import { distinctUntilChanged, shareReplay } from 'rxjs/operators';
+import { distinctUntilChanged } from 'rxjs/operators';
 
 export interface VisitsData {
   Acompanado: string;
@@ -77,8 +77,7 @@ export class VisitsService {
     }).pipe(
       distinctUntilChanged(
         (prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)
-      ),
-      shareReplay(1)
+      )
     );
   }
 }
