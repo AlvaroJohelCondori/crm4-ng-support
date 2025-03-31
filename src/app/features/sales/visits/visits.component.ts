@@ -117,6 +117,7 @@ export class VisitsComponent implements AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   isLoading = true;
+  defaultPageSize = 10;
 
   constructor(private visitsService: VisitsService) {
     this.dataSource = new MatTableDataSource<VisitsData>([]);
@@ -129,6 +130,9 @@ export class VisitsComponent implements AfterViewInit {
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+    if (this.paginator) {
+      this.paginator.pageSize = this.defaultPageSize;
+    }
   }
 
   applyFilter(event: Event) {
