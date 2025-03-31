@@ -216,7 +216,7 @@ export class VisitsComponent implements AfterViewInit {
 
   openDialog() {
     const dialogRef = this.dialog.open(DialogContentExampleDialog, {
-      width: '500px',
+      width: '600px',
       data: {
         allColumns: this.allColumns,
         selectedColumns: this.columnsToDisplay,
