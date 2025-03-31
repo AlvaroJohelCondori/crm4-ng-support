@@ -3,7 +3,6 @@ import {
   Component,
   AfterViewInit,
   ViewChild,
-  inject,
   Input,
   Inject,
   ChangeDetectorRef,
@@ -138,7 +137,6 @@ export class VisitsComponent implements OnInit, AfterViewInit, OnDestroy {
     { value: 'UsuarioFecha', viewValue: 'UsuarioFecha' },
   ];
 
-  // Estado del componente
   isLoading = true;
   dataSource = new MatTableDataSource<VisitsData>([]);
   displayedColumns: string[] = [...this.DEFAULT_COLUMNS];
@@ -155,7 +153,28 @@ export class VisitsComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.loadVisits();
+    this.isLoading = true;
+    this.visitsService
+      .getVisits()
+      .pipe(
+        takeUntil(this.destroy$),
+        finalize(() => {
+          this.isLoading = false;
+          this.changeDetectorRef.detectChanges();
+        })
+      )
+      .subscribe({
+        next: (data) => {
+          this.processVisitsData(data);
+          this.isLoading = false;
+          this.changeDetectorRef.detectChanges();
+        },
+        error: (error) => {
+          console.error('Error loading visits data:', error);
+          this.isLoading = false;
+          this.changeDetectorRef.detectChanges();
+        },
+      });
   }
 
   ngAfterViewInit(): void {
@@ -174,7 +193,6 @@ export class VisitsComponent implements OnInit, AfterViewInit, OnDestroy {
       this.paginator.pageSize = this.defaultPageSize;
       this.paginator.pageIndex = 0;
 
-      // Personalizar la función de filtrado
       this.dataSource.filterPredicate = (data: VisitsData, filter: string) => {
         const searchStr = filter.toLowerCase();
         return Object.values(data).some((value) =>
@@ -186,31 +204,8 @@ export class VisitsComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  loadVisits(): void {
-    this.isLoading = true;
-    this.changeDetectorRef.markForCheck();
-
-    this.visitsService
-      .getVisits()
-      .pipe(
-        takeUntil(this.destroy$),
-        finalize(() => {
-          this.isLoading = false;
-          this.changeDetectorRef.detectChanges();
-        })
-      )
-      .subscribe({
-        next: (visits) => {
-          this.dataSource.data = visits;
-          this.isLoading = false;
-          this.changeDetectorRef.detectChanges();
-        },
-        error: (error) => {
-          console.error('Error al cargar visitas:', error);
-          this.isLoading = false;
-          this.changeDetectorRef.detectChanges();
-        },
-      });
+  private processVisitsData(data: VisitsData[]) {
+    this.dataSource.data = data;
   }
 
   applyFilter(event: Event): void {
