@@ -41,4 +41,11 @@ export const routes: Routes = [
         (m) => m.VisitsComponent
       ),
   },
+  {
+    path: 'distribution/users',
+    loadComponent: () =>
+      import('./features/distribution/components/users/users.component').then(
+        (m) => m.UsersComponent
+      ),
+  },
 ];
