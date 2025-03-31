@@ -48,4 +48,11 @@ export const routes: Routes = [
         (m) => m.UsersComponent
       ),
   },
+  {
+    path: 'distribution/collections',
+    loadComponent: () =>
+      import(
+        './features/distribution/components/collections/collections.component'
+      ).then((m) => m.CollectionsComponent),
+  },
 ];

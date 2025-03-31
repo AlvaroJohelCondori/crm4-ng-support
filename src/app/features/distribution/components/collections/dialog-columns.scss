@@ -1,0 +1,16 @@
+.columns-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 16px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.select-all-option {
+  padding: 8px 16px;
+}
+
+mat-divider {
+  margin: 8px 0;
+}
