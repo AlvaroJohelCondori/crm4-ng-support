@@ -1,0 +1,30 @@
+<h2 mat-dialog-title>Seleccionar Columnas</h2>
+<mat-dialog-content class="mat-typography">
+  <div class="select-all-option">
+    <mat-checkbox
+      [checked]="areAllColumnsSelected()"
+      [indeterminate]="selectedColumns.length > 0 && !areAllColumnsSelected()"
+      (change)="toggleAllColumns($event.checked)"
+    >
+      Seleccionar todo
+    </mat-checkbox>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <div class="columns-container">
+    <mat-checkbox
+      *ngFor="let column of allColumns"
+      [checked]="selectedColumns.includes(column.value)"
+      (change)="toggleColumn(column.value, $event.checked)"
+    >
+      {{ column.viewValue }}
+    </mat-checkbox>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="dialogRef.close()">Cancelar</button>
+  <button mat-button [mat-dialog-close]="selectedColumns" cdkFocusInitial>
+    Aplicar
+  </button>
+</mat-dialog-actions>

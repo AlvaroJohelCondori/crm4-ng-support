@@ -4,6 +4,10 @@ import {
   AfterViewInit,
   ViewChild,
   inject,
+  Input,
+  Inject,
+  ChangeDetectorRef,
+  OnInit,
 } from '@angular/core';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
@@ -17,7 +21,12 @@ import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDividerModule } from '@angular/material/divider';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import {
+  MatDialog,
+  MatDialogModule,
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+} from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 
 export interface VisitsData {
@@ -132,7 +141,10 @@ export class VisitsComponent implements AfterViewInit {
   isLoading = true;
   defaultPageSize = 10;
 
-  constructor(private visitsService: VisitsService) {
+  constructor(
+    private visitsService: VisitsService,
+    private changeDetectorRef: ChangeDetectorRef
+  ) {
     this.dataSource = new MatTableDataSource<VisitsData>([]);
   }
 
@@ -174,9 +186,11 @@ export class VisitsComponent implements AfterViewInit {
 
   updateDisplayedColumns(selectedColumns: string[]) {
     if (selectedColumns && selectedColumns.length > 0) {
-      this.columnsToDisplay = [...selectedColumns];
+      this.columnsToDisplay = selectedColumns;
+      this.changeDetectorRef.detectChanges();
     } else {
       this.columnsToDisplay = ['ActividadID'];
+      this.changeDetectorRef.detectChanges();
     }
   }
 
@@ -201,18 +215,76 @@ export class VisitsComponent implements AfterViewInit {
   }
 
   openDialog() {
-    const dialogRef = this.dialog.open(DialogContentExampleDialog);
+    const dialogRef = this.dialog.open(DialogContentExampleDialog, {
+      width: '500px',
+      data: {
+        allColumns: this.allColumns,
+        selectedColumns: this.columnsToDisplay,
+      },
+    });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log(`Dialog result: ${result}`);
+      if (result) {
+        this.updateDisplayedColumns(result);
+      }
     });
   }
 }
 
 @Component({
-  selector: 'dialog-content-example-dialog',
-  templateUrl: 'dialog-content-example-dialog.html',
-  imports: [MatDialogModule, MatButtonModule],
+  selector: 'dialog-columns',
+  templateUrl: 'dialog-columns.html',
+  styleUrls: ['dialog-columns.scss'],
+  imports: [
+    MatDialogModule,
+    MatButtonModule,
+    MatCheckboxModule,
+    CommonModule,
+    FormsModule,
+    MatDividerModule,
+  ],
+  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DialogContentExampleDialog {}
+export class DialogContentExampleDialog implements OnInit {
+  @Input() allColumns: { value: string; viewValue: string }[] = [];
+  @Input() selectedColumns: string[] = [];
+
+  constructor(
+    public dialogRef: MatDialogRef<DialogContentExampleDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private changeDetectorRef: ChangeDetectorRef
+  ) {}
+
+  ngOnInit() {
+    this.allColumns = this.data.allColumns;
+    this.selectedColumns = this.data.selectedColumns;
+  }
+
+  areAllColumnsSelected(): boolean {
+    return this.allColumns.length === this.selectedColumns.length;
+  }
+
+  toggleAllColumns(checked: boolean) {
+    this.selectedColumns = checked
+      ? this.allColumns.map((col) => col.value)
+      : ['ActividadID'];
+    this.changeDetectorRef.detectChanges();
+  }
+
+  toggleColumn(columnValue: string, checked: boolean) {
+    if (checked) {
+      if (!this.selectedColumns.includes(columnValue)) {
+        this.selectedColumns.push(columnValue);
+      }
+    } else {
+      this.selectedColumns = this.selectedColumns.filter(
+        (col) => col !== columnValue
+      );
+      if (this.selectedColumns.length === 0) {
+        this.selectedColumns = ['ActividadID'];
+      }
+    }
+    this.changeDetectorRef.detectChanges();
+  }
+}
