@@ -1,4 +1,10 @@
-import { Component, AfterViewInit, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  AfterViewInit,
+  ViewChild,
+  inject,
+} from '@angular/core';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -11,6 +17,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
 
 export interface VisitsData {
   Acompanado: string;
@@ -59,11 +67,16 @@ export interface VisitsData {
     FormsModule,
     MatCheckboxModule,
     MatDividerModule,
+    MatDialogModule,
+    MatButtonModule,
   ],
   templateUrl: './visits.component.html',
   styleUrl: './visits.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VisitsComponent implements AfterViewInit {
+  readonly dialog = inject(MatDialog);
+
   // Todas las columnas disponibles
   allColumns: { value: string; viewValue: string }[] = [
     { value: 'Acompanado', viewValue: 'Acompanado' },
@@ -186,4 +199,20 @@ export class VisitsComponent implements AfterViewInit {
       this.deselectAllColumns();
     }
   }
+
+  openDialog() {
+    const dialogRef = this.dialog.open(DialogContentExampleDialog);
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log(`Dialog result: ${result}`);
+    });
+  }
 }
+
+@Component({
+  selector: 'dialog-content-example-dialog',
+  templateUrl: 'dialog-content-example-dialog.html',
+  imports: [MatDialogModule, MatButtonModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class DialogContentExampleDialog {}
