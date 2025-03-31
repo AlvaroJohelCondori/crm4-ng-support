@@ -28,6 +28,13 @@ export const routes: Routes = [
       ).then((m) => m.CollectionsComponent),
   },
   {
+    path: 'sales/users',
+    loadComponent: () =>
+      import('./features/sales/components/users/users.component').then(
+        (m) => m.UsersComponent
+      ),
+  },
+  {
     path: 'distribution/visits',
     loadComponent: () =>
       import('./features/distribution/components/visits/visits.component').then(
