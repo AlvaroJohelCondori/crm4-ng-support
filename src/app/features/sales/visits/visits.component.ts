@@ -8,6 +8,7 @@ import {
   Inject,
   ChangeDetectorRef,
   OnInit,
+  OnDestroy,
 } from '@angular/core';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
@@ -28,6 +29,8 @@ import {
   MAT_DIALOG_DATA,
 } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
+import { Subject } from 'rxjs';
+import { takeUntil, finalize } from 'rxjs/operators';
 
 export interface VisitsData {
   Acompanado: string;
@@ -83,44 +86,12 @@ export interface VisitsData {
   styleUrl: './visits.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class VisitsComponent implements AfterViewInit {
-  readonly dialog = inject(MatDialog);
+export class VisitsComponent implements OnInit, AfterViewInit, OnDestroy {
+  private readonly destroy$ = new Subject<void>();
+  readonly defaultPageSize = 10;
 
-  // Todas las columnas disponibles
-  allColumns: { value: string; viewValue: string }[] = [
-    { value: 'Acompanado', viewValue: 'Acompanado' },
-    { value: 'ActividadID', viewValue: 'ActividadID' },
-    { value: 'CodDivision', viewValue: 'CodDivision' },
-    { value: 'CodUsuario', viewValue: 'CodUsuario' },
-    { value: 'CodVendedor', viewValue: 'CodVendedor' },
-    { value: 'Descripcion', viewValue: 'Descripcion' },
-    { value: 'DirCliente', viewValue: 'DirCliente' },
-    { value: 'Estado', viewValue: 'Estado' },
-    { value: 'FechaCompromiso', viewValue: 'FechaCompromiso' },
-    { value: 'FechaCrea', viewValue: 'FechaCrea' },
-    { value: 'FechaFinPlan', viewValue: 'FechaFinPlan' },
-    { value: 'FechaFinReal', viewValue: 'FechaFinReal' },
-    { value: 'FechaIniPlan', viewValue: 'FechaIniPlan' },
-    { value: 'FechaIniReal', viewValue: 'FechaIniReal' },
-    { value: 'GrupoCliente', viewValue: 'GrupoCliente' },
-    { value: 'Kunnr', viewValue: 'Kunnr' },
-    { value: 'LatitudPlan', viewValue: 'LatitudPlan' },
-    { value: 'LatitudReal', viewValue: 'LatitudReal' },
-    { value: 'LongitudPlan', viewValue: 'LongitudPlan' },
-    { value: 'LongitudReal', viewValue: 'LongitudReal' },
-    { value: 'MotivoNoActividad', viewValue: 'MotivoNoActividad' },
-    { value: 'NombreCliente', viewValue: 'NombreCliente' },
-    { value: 'NombreUsuario', viewValue: 'NombreUsuario' },
-    { value: 'Observacion', viewValue: 'Observacion' },
-    { value: 'OrgVenta', viewValue: 'OrgVenta' },
-    { value: 'Regional', viewValue: 'Regional' },
-    { value: 'RegionalCliente', viewValue: 'RegionalCliente' },
-    { value: 'Remoto', viewValue: 'Remoto' },
-    { value: 'UsuarioFecha', viewValue: 'UsuarioFecha' },
-  ];
-
-  // Columnas seleccionadas por defecto
-  displayedColumns: string[] = [
+  // Mover columnas a una propiedad readonly
+  private readonly DEFAULT_COLUMNS = [
     'ActividadID',
     'FechaIniPlan',
     'Kunnr',
@@ -128,42 +99,93 @@ export class VisitsComponent implements AfterViewInit {
     'NombreUsuario',
     'Regional',
     'Estado',
+  ] as const;
+
+  allColumns = [
+    { value: 'ActividadID', viewValue: 'ActividadID' },
+    { value: 'FechaIniPlan', viewValue: 'FechaIniPlan' },
+    { value: 'Kunnr', viewValue: 'Kunnr' },
+    { value: 'NombreCliente', viewValue: 'NombreCliente' },
+    { value: 'NombreUsuario', viewValue: 'NombreUsuario' },
+    { value: 'Regional', viewValue: 'Regional' },
+    { value: 'Estado', viewValue: 'Estado' },
   ];
 
-  // Columnas que se muestran actualmente
-  columnsToDisplay: string[] = [...this.displayedColumns];
-
-  dataSource: MatTableDataSource<VisitsData>;
+  // Estado del componente
+  isLoading = true;
+  dataSource = new MatTableDataSource<VisitsData>([]);
+  displayedColumns: string[] = [...this.DEFAULT_COLUMNS];
+  columnsToDisplay: string[] = [...this.DEFAULT_COLUMNS];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  isLoading = true;
-  readonly defaultPageSize = 10;
-
   constructor(
     private visitsService: VisitsService,
-    private changeDetectorRef: ChangeDetectorRef
-  ) {
-    this.dataSource = new MatTableDataSource<VisitsData>([]);
-  }
+    private changeDetectorRef: ChangeDetectorRef,
+    private dialog: MatDialog
+  ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.loadVisits();
   }
 
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+  ngAfterViewInit(): void {
+    this.initializeDataSource();
+  }
 
-    if (this.paginator) {
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  private initializeDataSource(): void {
+    if (this.paginator && this.sort) {
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
       this.paginator.pageSize = this.defaultPageSize;
       this.paginator.pageIndex = 0;
+
+      // Personalizar la función de filtrado
+      this.dataSource.filterPredicate = (data: VisitsData, filter: string) => {
+        const searchStr = filter.toLowerCase();
+        return Object.values(data).some((value) =>
+          value?.toString().toLowerCase().includes(searchStr)
+        );
+      };
+
       this.changeDetectorRef.detectChanges();
     }
   }
 
-  applyFilter(event: Event) {
+  loadVisits(): void {
+    this.isLoading = true;
+    this.changeDetectorRef.markForCheck();
+
+    this.visitsService
+      .getVisits()
+      .pipe(
+        takeUntil(this.destroy$),
+        finalize(() => {
+          this.isLoading = false;
+          this.changeDetectorRef.detectChanges();
+        })
+      )
+      .subscribe({
+        next: (visits) => {
+          this.dataSource.data = visits;
+          this.isLoading = false;
+          this.changeDetectorRef.detectChanges();
+        },
+        error: (error) => {
+          console.error('Error al cargar visitas:', error);
+          this.isLoading = false;
+          this.changeDetectorRef.detectChanges();
+        },
+      });
+  }
+
+  applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
 
@@ -172,65 +194,33 @@ export class VisitsComponent implements AfterViewInit {
     }
   }
 
-  loadVisits() {
-    this.isLoading = true;
-    this.visitsService.getVisits().subscribe({
-      next: (visits) => {
-        this.dataSource.data = visits;
-        this.isLoading = false;
-        console.log('Visitas cargadas:', visits.length);
-      },
-      error: (error) => {
-        console.error('Error al cargar visitas:', error);
-        this.isLoading = false;
-      },
-    });
-  }
-
-  updateDisplayedColumns(selectedColumns: string[]) {
-    if (selectedColumns && selectedColumns.length > 0) {
+  updateDisplayedColumns(selectedColumns: string[]): void {
+    if (selectedColumns?.length) {
       this.columnsToDisplay = selectedColumns;
-      this.changeDetectorRef.detectChanges();
     } else {
-      this.columnsToDisplay = ['ActividadID'];
-      this.changeDetectorRef.detectChanges();
+      this.columnsToDisplay = [this.DEFAULT_COLUMNS[0]];
     }
+    this.changeDetectorRef.markForCheck();
   }
 
-  selectAllColumns() {
-    this.columnsToDisplay = this.allColumns.map((column) => column.value);
-  }
-
-  deselectAllColumns() {
-    this.columnsToDisplay = ['ActividadID'];
-  }
-
-  areAllColumnsSelected(): boolean {
-    return this.allColumns.length === this.columnsToDisplay.length;
-  }
-
-  toggleAllColumns(checked: boolean) {
-    if (checked) {
-      this.selectAllColumns();
-    } else {
-      this.deselectAllColumns();
-    }
-  }
-
-  openDialog() {
+  openDialog(): void {
     const dialogRef = this.dialog.open(DialogContentExampleDialog, {
       width: '600px',
       data: {
         allColumns: this.allColumns,
-        selectedColumns: this.columnsToDisplay,
+        selectedColumns: [...this.columnsToDisplay],
       },
+      disableClose: true,
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.updateDisplayedColumns(result);
-      }
-    });
+    dialogRef
+      .afterClosed()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((result) => {
+        if (result) {
+          this.updateDisplayedColumns(result);
+        }
+      });
   }
 }
 

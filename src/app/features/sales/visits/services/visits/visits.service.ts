@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Database, ref, onValue } from '@angular/fire/database';
 import { Observable } from 'rxjs';
+import { distinctUntilChanged, shareReplay } from 'rxjs/operators';
 
 export interface VisitsData {
   Acompanado: string;
@@ -41,34 +42,46 @@ export class VisitsService {
   constructor(private db: Database) {}
 
   getVisits(): Observable<VisitsData[]> {
+    // Convertir a Observable frío para mejor control de memoria
     return new Observable<VisitsData[]>((observer) => {
-      // Referencia al nodo 'visitas' en la base de datos Firebase
       const visitsRef = ref(this.db, ':80/Actividad/BO10');
+      let unsubscribe: () => void;
 
-      // Escuchar cambios en la referencia
-      const unsubscribe = onValue(
-        visitsRef,
-        (snapshot) => {
-          const visits: VisitsData[] = [];
+      try {
+        unsubscribe = onValue(
+          visitsRef,
+          (snapshot) => {
+            if (!snapshot.exists()) {
+              observer.next([]);
+              return;
+            }
 
-          if (snapshot.exists()) {
+            const visits: VisitsData[] = [];
             snapshot.forEach((childSnapshot) => {
-              const visitData = childSnapshot.val() as VisitsData;
-              visits.push(visitData);
-              return false; // Continuar iterando
+              visits.push(childSnapshot.val() as VisitsData);
+              return false;
             });
+
+            observer.next(visits);
+          },
+          (error) => {
+            console.error('Error al obtener visitas:', error);
+            observer.error(error);
           }
+        );
 
-          observer.next(visits);
-        },
-        (error) => {
-          console.error('Error al obtener visitas:', error);
-          observer.error(error);
-        }
-      );
-
-      // Devolver función para limpiar suscripción cuando se complete
-      return { unsubscribe };
-    });
+        return () => unsubscribe();
+      } catch (error) {
+        observer.error(error);
+        return () => {}; // Return empty cleanup function in case of error
+      }
+    }).pipe(
+      // Evitar múltiples emisiones del mismo valor
+      distinctUntilChanged(
+        (prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)
+      ),
+      // Cachear último resultado
+      shareReplay(1)
+    );
   }
 }
