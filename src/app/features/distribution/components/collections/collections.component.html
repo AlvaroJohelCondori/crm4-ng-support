@@ -18,6 +18,13 @@
       #input
     />
   </mat-form-field>
+
+  <mat-paginator
+    [pageSize]="defaultPageSize"
+    [pageSizeOptions]="[10, 20, 50, 100]"
+    showFirstLastButtons
+    aria-label="Seleccionar página de visitas"
+  ></mat-paginator>
 </div>
 
 <div class="example-container">
@@ -58,10 +65,3 @@
     </tr>
   </table>
 </div>
-
-<mat-paginator
-  [pageSize]="defaultPageSize"
-  [pageSizeOptions]="[10]"
-  showFirstLastButtons
-  aria-label="Seleccionar página de visitas"
-></mat-paginator>
