@@ -3,9 +3,21 @@
   margin-bottom: 16px;
 }
 
+.search-and-filter-container {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+  width: 100%;
+}
+
+.column-selector-button {
+  flex-shrink: 0;
+}
+
 .mat-mdc-form-field {
   font-size: 14px;
-  width: 100%;
+  flex-grow: 1;
 }
 
 .example-container {

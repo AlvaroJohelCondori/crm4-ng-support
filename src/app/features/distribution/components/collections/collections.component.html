@@ -1,16 +1,24 @@
-<div class="column-selector-container">
-  <button mat-button (click)="openDialog()">Seleccionar Columnas</button>
-</div>
+<div class="search-and-filter-container">
+  <button
+    mat-raised-button
+    color="primary"
+    class="column-selector-button"
+    (click)="openDialog()"
+  >
+    <mat-icon>view_column</mat-icon>
+    Columnas
+  </button>
 
-<mat-form-field>
-  <mat-label>Búsqueda General</mat-label>
-  <input
-    matInput
-    (keyup)="applyFilter($event)"
-    placeholder="Buscar..."
-    #input
-  />
-</mat-form-field>
+  <mat-form-field>
+    <mat-label>Búsqueda General</mat-label>
+    <input
+      matInput
+      (keyup)="applyFilter($event)"
+      placeholder="Buscar..."
+      #input
+    />
+  </mat-form-field>
+</div>
 
 <div class="example-container">
   <div class="loading-overlay" *ngIf="isLoading">
