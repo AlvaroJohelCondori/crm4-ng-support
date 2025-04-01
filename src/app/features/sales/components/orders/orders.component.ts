@@ -315,6 +315,28 @@ export class OrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  updateOrderDate(order: OrdersData) {
+    this.ordersService
+      .updateOrder(order)
+      .then(() => {
+        this.snackBar.open('Fecha actualizada correctamente', 'Cerrar', {
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom',
+        });
+        // Recargar datos
+        this.ngOnInit();
+      })
+      .catch((error) => {
+        console.error('Error al actualizar fecha:', error);
+        this.snackBar.open('Error al actualizar la fecha', 'Cerrar', {
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom',
+        });
+      });
+  }
+
   hasEmptyRequiredFields(row: OrdersData): boolean {
     return !!(
       !row.Estado ||

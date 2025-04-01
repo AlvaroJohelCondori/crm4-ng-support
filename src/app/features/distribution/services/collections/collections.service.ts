@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Database, ref, onValue } from '@angular/fire/database';
+import { Database, ref, onValue, update } from '@angular/fire/database';
 import { Observable } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 import { Visita } from '../../models/collections/collections.interface';
+import { Recibo } from '../../models/collections/collections.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -48,5 +49,27 @@ export class CollectionsService {
         (prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)
       )
     );
+  }
+
+  updateReceipt(receipt: Recibo): Promise<void> {
+    let auxValue = '0';
+    const dateString = receipt.Fecha;
+    const lastDigit = dateString.substring(
+      dateString.length - 1,
+      dateString.length
+    );
+
+    if (lastDigit === '0') {
+      auxValue = '1';
+    }
+
+    let newDate = dateString.substring(0, dateString.length - 1);
+    newDate = newDate + auxValue;
+
+    const receiptRef = ref(
+      this.db,
+      `/Visitas/1100/${receipt.ActividadID}/Tareas/${receipt.TareaID}/Cobranza/${receipt.ReciboID}`
+    );
+    return update(receiptRef, { Fecha: newDate });
   }
 }

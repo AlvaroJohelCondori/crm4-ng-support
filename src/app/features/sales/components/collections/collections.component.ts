@@ -295,6 +295,27 @@ export class CollectionsComponent implements OnInit, AfterViewInit, OnDestroy {
       );
     }
   }
+
+  updateReceiptDate(receipt: CollectionsData) {
+    this.collectionsService
+      .updateReceipt(receipt)
+      .then(() => {
+        this.snackBar.open('Fecha actualizada correctamente', 'Cerrar', {
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom',
+        });
+        this.ngOnInit();
+      })
+      .catch((error) => {
+        console.error('Error al actualizar fecha:', error);
+        this.snackBar.open('Error al actualizar la fecha', 'Cerrar', {
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom',
+        });
+      });
+  }
 }
 
 @Component({
