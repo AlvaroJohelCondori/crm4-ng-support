@@ -88,11 +88,12 @@ export class UsersComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private readonly DEFAULT_COLUMNS = [
     'CodUsuario',
+    'Cargo',
     'Password',
-    'AndroidID',
     'Estado',
     'Nombre',
     'Regional',
+    'UltimoLogueo',
     'VersionApp',
   ] as const;
 
