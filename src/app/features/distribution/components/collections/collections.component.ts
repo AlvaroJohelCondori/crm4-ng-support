@@ -34,6 +34,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Visita } from '../../models/collections/collections.interface';
+import { Recibo } from '../../models/collections/collections.interface';
 
 @Component({
   selector: 'app-orders',
@@ -72,6 +73,7 @@ export class CollectionsComponent implements OnInit, AfterViewInit, OnDestroy {
     'Fecha',
     'IdVendedor',
     'FormaPago',
+    'NroDocumento',
   ] as const;
 
   allColumns = [
@@ -192,18 +194,14 @@ export class CollectionsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private processCollectionsData(data: Visita[]) {
-    const collections: any[] = [];
+    const collections: Recibo[] = [];
 
     data.forEach((visita) => {
       if (visita.Tareas) {
         Object.values(visita.Tareas).forEach((tarea) => {
           if (tarea.Cobranza) {
             Object.values(tarea.Cobranza).forEach((recibo) => {
-              const flattenedCollection = {
-                ...recibo,
-              };
-
-              collections.push(flattenedCollection);
+              collections.push(recibo);
             });
           }
         });
