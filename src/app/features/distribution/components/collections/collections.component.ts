@@ -72,7 +72,6 @@ export class CollectionsComponent implements OnInit, AfterViewInit, OnDestroy {
     'ImpTotalBS',
     'Fecha',
     'IdVendedor',
-    'FormaPago',
     'NroDocumento',
   ] as const;
 
