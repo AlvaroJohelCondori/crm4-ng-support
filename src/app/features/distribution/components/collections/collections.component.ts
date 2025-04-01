@@ -153,7 +153,6 @@ export class CollectionsComponent implements OnInit, AfterViewInit, OnDestroy {
       )
       .subscribe({
         next: (data) => {
-          console.log('data distribution', data);
           this.processCollectionsData(data);
           this.isLoading = false;
           this.changeDetectorRef.detectChanges();
@@ -208,7 +207,6 @@ export class CollectionsComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     });
 
-    console.log('Colecciones procesadas:', collections);
     this.dataSource.data = collections;
   }
 
@@ -232,7 +230,8 @@ export class CollectionsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   openDialog(): void {
     const dialogRef = this.dialog.open(DialogContentExampleDialog, {
-      width: '600px',
+      width: '800px',
+      maxWidth: '90vw',
       data: {
         allColumns: this.allColumns,
         selectedColumns: [...this.columnsToDisplay],
