@@ -2,49 +2,7 @@ import { Injectable } from '@angular/core';
 import { Database, ref, onValue } from '@angular/fire/database';
 import { Observable } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
-
-export interface CollectionsData {
-  ActividadID: string;
-  CodBanco: string;
-  CodRecibo: string;
-  Confirmacion: string;
-  DZ1: string;
-  DZ2: string;
-  Descuento: string;
-  EsPrepago: string;
-  Estado: string;
-  Fecha: string;
-  FechaDoc: string;
-  FechaModificacion: string;
-  FormaPago: string;
-  FormaPagoSAP: string;
-  IdVendedor: string;
-  ImpTotalBS: string;
-  ImpTotalUSD: string;
-  ImporteBS: string;
-  ImporteUSD: string;
-  KUNNR: string;
-  Latitud: string;
-  Longitud: string;
-  Moneda: string;
-  MonedaDoc: string;
-  NombreCliente: string;
-  NombreDepositante: string;
-  Notas: string;
-  NroDocumento: string;
-  NroPosiciones: string;
-  NroReciboManual: string;
-  Observacion: string;
-  OtroBanco: string;
-  ReAnulado: string;
-  ReciboID: string;
-  RegionalBanco: string;
-  SolAnulacion: string;
-  TareaID: string;
-  TipoCambio: string;
-  TotalBS: string;
-  TotalUSD: string;
-}
+import { Visita } from '../../models/collections/collections.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -52,9 +10,9 @@ export interface CollectionsData {
 export class CollectionsService {
   constructor(private db: Database) {}
 
-  getCollections(): Observable<CollectionsData[]> {
-    return new Observable<CollectionsData[]>((observer) => {
-      const collectionsRef = ref(this.db, ':80/Pedido');
+  getCollections(): Observable<Visita[]> {
+    return new Observable<Visita[]>((observer) => {
+      const collectionsRef = ref(this.db, '/Visitas/1100');
       let unsubscribe: () => void;
 
       try {
@@ -66,9 +24,9 @@ export class CollectionsService {
               return;
             }
 
-            const collections: CollectionsData[] = [];
+            const collections: Visita[] = [];
             snapshot.forEach((childSnapshot) => {
-              collections.push(childSnapshot.val() as CollectionsData);
+              collections.push(childSnapshot.val() as Visita);
               return false;
             });
 

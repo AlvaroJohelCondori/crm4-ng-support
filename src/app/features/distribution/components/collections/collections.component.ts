@@ -33,49 +33,7 @@ import { takeUntil, finalize } from 'rxjs/operators';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-
-export interface CollectionsData {
-  ActividadID: string;
-  CodBanco: string;
-  CodRecibo: string;
-  Confirmacion: string;
-  DZ1: string;
-  DZ2: string;
-  Descuento: string;
-  EsPrepago: string;
-  Estado: string;
-  Fecha: string;
-  FechaDoc: string;
-  FechaModificacion: string;
-  FormaPago: string;
-  FormaPagoSAP: string;
-  IdVendedor: string;
-  ImpTotalBS: string;
-  ImpTotalUSD: string;
-  ImporteBS: string;
-  ImporteUSD: string;
-  KUNNR: string;
-  Latitud: string;
-  Longitud: string;
-  Moneda: string;
-  MonedaDoc: string;
-  NombreCliente: string;
-  NombreDepositante: string;
-  Notas: string;
-  NroDocumento: string;
-  NroPosiciones: string;
-  NroReciboManual: string;
-  Observacion: string;
-  OtroBanco: string;
-  ReAnulado: string;
-  ReciboID: string;
-  RegionalBanco: string;
-  SolAnulacion: string;
-  TareaID: string;
-  TipoCambio: string;
-  TotalBS: string;
-  TotalUSD: string;
-}
+import { Visita } from '../../models/collections/collections.interface';
 
 @Component({
   selector: 'app-orders',
@@ -107,22 +65,25 @@ export class CollectionsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private readonly DEFAULT_COLUMNS = [
     'ReciboID',
+    'NombreCliente',
+    'KUNNR',
     'Estado',
-    'FormaPagoSAP',
-    'NombreDepositante',
     'ImpTotalBS',
-    'TotalUSD',
+    'Fecha',
+    'IdVendedor',
+    'FormaPago',
   ] as const;
 
   allColumns = [
     { value: 'ActividadID', viewValue: 'ActividadID' },
     { value: 'CodBanco', viewValue: 'CodBanco' },
+    { value: 'CodPadre', viewValue: 'CodPadre' },
     { value: 'CodRecibo', viewValue: 'CodRecibo' },
     { value: 'Confirmacion', viewValue: 'Confirmacion' },
     { value: 'DZ1', viewValue: 'DZ1' },
     { value: 'DZ2', viewValue: 'DZ2' },
     { value: 'Descuento', viewValue: 'Descuento' },
-    { value: 'EsPrepago', viewValue: 'EsPrepago' },
+    { value: 'Detalles', viewValue: 'Detalles' },
     { value: 'Estado', viewValue: 'Estado' },
     { value: 'Fecha', viewValue: 'Fecha' },
     { value: 'FechaDoc', viewValue: 'FechaDoc' },
@@ -141,6 +102,7 @@ export class CollectionsComponent implements OnInit, AfterViewInit, OnDestroy {
     { value: 'MonedaDoc', viewValue: 'MonedaDoc' },
     { value: 'NombreCliente', viewValue: 'NombreCliente' },
     { value: 'NombreDepositante', viewValue: 'NombreDepositante' },
+    { value: 'NombreVendedor', viewValue: 'NombreVendedor' },
     { value: 'Notas', viewValue: 'Notas' },
     { value: 'NroDocumento', viewValue: 'NroDocumento' },
     { value: 'NroPosiciones', viewValue: 'NroPosiciones' },
@@ -155,10 +117,11 @@ export class CollectionsComponent implements OnInit, AfterViewInit, OnDestroy {
     { value: 'TipoCambio', viewValue: 'TipoCambio' },
     { value: 'TotalBS', viewValue: 'TotalBS' },
     { value: 'TotalUSD', viewValue: 'TotalUSD' },
+    { value: 'fecha', viewValue: 'fecha' },
   ];
 
   isLoading = true;
-  dataSource = new MatTableDataSource<CollectionsData>([]);
+  dataSource = new MatTableDataSource<any>([]);
   displayedColumns: string[] = [...this.DEFAULT_COLUMNS];
   columnsToDisplay: string[] = [...this.DEFAULT_COLUMNS];
 
@@ -188,6 +151,7 @@ export class CollectionsComponent implements OnInit, AfterViewInit, OnDestroy {
       )
       .subscribe({
         next: (data) => {
+          console.log('data distribution', data);
           this.processCollectionsData(data);
           this.isLoading = false;
           this.changeDetectorRef.detectChanges();
@@ -216,10 +180,7 @@ export class CollectionsComponent implements OnInit, AfterViewInit, OnDestroy {
       this.paginator.pageSize = this.defaultPageSize;
       this.paginator.pageIndex = 0;
 
-      this.dataSource.filterPredicate = (
-        data: CollectionsData,
-        filter: string
-      ) => {
+      this.dataSource.filterPredicate = (data: any, filter: string) => {
         const searchStr = filter.toLowerCase();
         return Object.values(data).some((value) =>
           value?.toString().toLowerCase().includes(searchStr)
@@ -230,8 +191,27 @@ export class CollectionsComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  private processCollectionsData(data: CollectionsData[]) {
-    this.dataSource.data = data;
+  private processCollectionsData(data: Visita[]) {
+    const collections: any[] = [];
+
+    data.forEach((visita) => {
+      if (visita.Tareas) {
+        Object.values(visita.Tareas).forEach((tarea) => {
+          if (tarea.Cobranza) {
+            Object.values(tarea.Cobranza).forEach((recibo) => {
+              const flattenedCollection = {
+                ...recibo,
+              };
+
+              collections.push(flattenedCollection);
+            });
+          }
+        });
+      }
+    });
+
+    console.log('Colecciones procesadas:', collections);
+    this.dataSource.data = collections;
   }
 
   applyFilter(event: Event): void {
