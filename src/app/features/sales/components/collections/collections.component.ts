@@ -108,10 +108,12 @@ export class CollectionsComponent implements OnInit, AfterViewInit, OnDestroy {
   private readonly DEFAULT_COLUMNS = [
     'ReciboID',
     'Estado',
-    'FormaPagoSAP',
-    'NombreDepositante',
+    'NroDocumento',
+    'Fecha',
+    'IdVendedor',
     'ImpTotalBS',
-    'TotalUSD',
+    'KUNNR',
+    'NombreCliente',
   ] as const;
 
   allColumns = [

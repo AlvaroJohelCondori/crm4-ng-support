@@ -54,7 +54,7 @@ export class CollectionsService {
 
   getCollections(): Observable<CollectionsData[]> {
     return new Observable<CollectionsData[]>((observer) => {
-      const collectionsRef = ref(this.db, ':80/Pedido');
+      const collectionsRef = ref(this.db, ':80/Recibo');
       let unsubscribe: () => void;
 
       try {

@@ -68,6 +68,7 @@ export class CollectionsComponent implements OnInit, AfterViewInit, OnDestroy {
     'ReciboID',
     'CodRecibo',
     'Estado',
+    'NroDocumento',
     'Fecha',
     'FormaPago',
     'IdVendedor',
