@@ -66,13 +66,15 @@ export class CollectionsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private readonly DEFAULT_COLUMNS = [
     'ReciboID',
-    'NombreCliente',
-    'KUNNR',
+    'CodRecibo',
     'Estado',
-    'ImpTotalBS',
     'Fecha',
+    'FormaPago',
     'IdVendedor',
-    'NroDocumento',
+    'ImporteBS',
+    'NombreCliente',
+    'TareaID',
+    'ActividadID',
   ] as const;
 
   allColumns = [
@@ -84,7 +86,6 @@ export class CollectionsComponent implements OnInit, AfterViewInit, OnDestroy {
     { value: 'DZ1', viewValue: 'DZ1' },
     { value: 'DZ2', viewValue: 'DZ2' },
     { value: 'Descuento', viewValue: 'Descuento' },
-    { value: 'Detalles', viewValue: 'Detalles' },
     { value: 'Estado', viewValue: 'Estado' },
     { value: 'Fecha', viewValue: 'Fecha' },
     { value: 'FechaDoc', viewValue: 'FechaDoc' },

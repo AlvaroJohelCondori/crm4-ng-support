@@ -91,7 +91,6 @@ export interface Recibo {
   DZ1: string;
   DZ2: string;
   Descuento: string;
-  Detalles: ReciboDetalle[];
   Estado: string;
   Fecha: string;
   FechaDoc: string;
