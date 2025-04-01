@@ -44,9 +44,36 @@
           *matCellDef="let row"
           (click)="copyToClipboard(row[column.value])"
           class="copyable-cell"
+          [ngClass]="{
+            'outdated-version':
+              column.value === 'VersionApp' &&
+              !isLatestVersion(row[column.value]),
+            'latest-version':
+              column.value === 'VersionApp' &&
+              isLatestVersion(row[column.value])
+          }"
         >
           <div class="cell-content">
             <span>{{ row[column.value] }}</span>
+            <mat-icon
+              *ngIf="
+                column.value === 'VersionApp' &&
+                isLatestVersion(row[column.value])
+              "
+              class="version-icon latest"
+              matTooltip="Versión actualizada"
+              >check_circle</mat-icon
+            >
+            <mat-icon
+              *ngIf="
+                column.value === 'VersionApp' &&
+                !isLatestVersion(row[column.value]) &&
+                row[column.value]
+              "
+              class="version-icon outdated"
+              matTooltip="Versión desactualizada"
+              >warning</mat-icon
+            >
             <mat-icon class="copy-icon">content_copy</mat-icon>
           </div>
         </td>

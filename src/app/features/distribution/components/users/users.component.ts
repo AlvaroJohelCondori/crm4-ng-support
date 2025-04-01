@@ -128,6 +128,8 @@ export class UsersComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
+  latestVersion: string = '';
+
   constructor(
     private usersService: UsersService,
     private changeDetectorRef: ChangeDetectorRef,
@@ -191,6 +193,33 @@ export class UsersComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private processUsersData(data: UsersData[]) {
+    if (data.length > 0) {
+      this.latestVersion = data.reduce((latestVer, user) => {
+        if (!user.VersionApp) return latestVer;
+
+        const currentVersion = user.VersionApp.trim();
+
+        if (!latestVer) return currentVersion;
+
+        const currentParts = currentVersion
+          .split('.')
+          .map((part) => parseInt(part, 10));
+        const latestParts = latestVer
+          .split('.')
+          .map((part) => parseInt(part, 10));
+
+        for (let i = 0; i < currentParts.length; i++) {
+          if (currentParts[i] > latestParts[i]) {
+            return currentVersion;
+          } else if (currentParts[i] < latestParts[i]) {
+            return latestVer;
+          }
+        }
+
+        return latestVer;
+      }, '');
+    }
+
     this.dataSource.data = data;
   }
 
@@ -251,6 +280,11 @@ export class UsersComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       );
     }
+  }
+
+  isLatestVersion(version: string): boolean {
+    if (!version || !this.latestVersion) return false;
+    return version.trim() === this.latestVersion;
   }
 }
 

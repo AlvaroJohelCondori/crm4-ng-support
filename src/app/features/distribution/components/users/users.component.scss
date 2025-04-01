@@ -95,3 +95,31 @@ table {
   flex-direction: column;
   gap: 10px;
 }
+
+.latest-version {
+  background-color: rgba(76, 175, 80, 0.1);
+
+  &:hover {
+    background-color: rgba(76, 175, 80, 0.2);
+  }
+}
+
+.outdated-version {
+  background-color: rgba(255, 152, 0, 0.1);
+
+  &:hover {
+    background-color: rgba(255, 152, 0, 0.2);
+  }
+}
+
+.version-icon {
+  font-size: 18px;
+
+  &.latest {
+    color: #4caf50;
+  }
+
+  &.outdated {
+    color: #ff9800;
+  }
+}
