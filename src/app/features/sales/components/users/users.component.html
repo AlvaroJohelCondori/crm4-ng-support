@@ -1,16 +1,31 @@
-<div class="column-selector-container">
-  <button mat-button (click)="openDialog()">Seleccionar Columnas</button>
-</div>
+<div class="search-and-filter-container">
+  <button
+    mat-raised-button
+    color="primary"
+    class="column-selector-button"
+    (click)="openDialog()"
+  >
+    <mat-icon>view_column</mat-icon>
+    Columnas
+  </button>
 
-<mat-form-field>
-  <mat-label>Búsqueda General</mat-label>
-  <input
-    matInput
-    (keyup)="applyFilter($event)"
-    placeholder="Buscar..."
-    #input
-  />
-</mat-form-field>
+  <mat-form-field>
+    <mat-label>Búsqueda General</mat-label>
+    <input
+      matInput
+      (keyup)="applyFilter($event)"
+      placeholder="Buscar..."
+      #input
+    />
+  </mat-form-field>
+
+  <mat-paginator
+    [pageSize]="defaultPageSize"
+    [pageSizeOptions]="[10, 20, 50, 100]"
+    showFirstLastButtons
+    aria-label="Seleccionar página de visitas"
+  ></mat-paginator>
+</div>
 
 <div class="example-container">
   <div class="loading-overlay" *ngIf="isLoading">
@@ -50,10 +65,3 @@
     </tr>
   </table>
 </div>
-
-<mat-paginator
-  [pageSize]="defaultPageSize"
-  [pageSizeOptions]="[10]"
-  showFirstLastButtons
-  aria-label="Seleccionar página de visitas"
-></mat-paginator>

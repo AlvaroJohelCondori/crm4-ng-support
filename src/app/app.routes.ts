@@ -35,13 +35,6 @@ export const routes: Routes = [
       ),
   },
   {
-    path: 'distribution/visits',
-    loadComponent: () =>
-      import('./features/distribution/components/visits/visits.component').then(
-        (m) => m.VisitsComponent
-      ),
-  },
-  {
     path: 'distribution/users',
     loadComponent: () =>
       import('./features/distribution/components/users/users.component').then(
