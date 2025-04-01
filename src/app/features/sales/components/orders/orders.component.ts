@@ -118,10 +118,13 @@ export class OrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private readonly DEFAULT_COLUMNS = [
     'PedidoID',
-    'EstadoSync',
     'NroSAP',
     'Estado',
     'Fecha',
+    'MontoTotal',
+    'CodUsuario',
+    'RazonSocial',
+    'KUNNR',
   ] as const;
 
   allColumns = [
@@ -310,6 +313,16 @@ export class OrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       );
     }
+  }
+
+  hasEmptyRequiredFields(row: OrdersData): boolean {
+    return !!(
+      !row.Estado ||
+      row.Estado.trim() === '' ||
+      !row.NroSAP ||
+      row.NroSAP.trim() === '' ||
+      (row.NroSAP && row.NroSAP.includes('HCRM'))
+    );
   }
 }
 
