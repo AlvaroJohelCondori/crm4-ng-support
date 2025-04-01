@@ -231,7 +231,8 @@ export class VisitsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   openDialog(): void {
     const dialogRef = this.dialog.open(DialogContentExampleDialog, {
-      width: '600px',
+      width: '800px',
+      maxWidth: '90vw',
       data: {
         allColumns: this.allColumns,
         selectedColumns: [...this.columnsToDisplay],
